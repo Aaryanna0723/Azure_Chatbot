@@ -31,7 +31,7 @@ jobs:
         with:
           name: python-app
           path: |
-            Azure_Chatbot/      # Include everything in repo root
+            .     # Include everything in repo root
             !antenv/   # Exclude virtual environment
 
   deploy:
@@ -67,5 +67,6 @@ jobs:
         with:
           app-name: 'Support-Chatbot'
           slot-name: 'Production'
+
 
 
