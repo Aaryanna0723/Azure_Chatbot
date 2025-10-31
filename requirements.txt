@@ -1,0 +1,8 @@
+google-generativeai
+gradio
+pandas
+python-docx
+openpyxl
+spacy
+requests
+dotenv
