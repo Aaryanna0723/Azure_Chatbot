@@ -60,10 +60,11 @@ jobs:
 
       # ✅ Set startup command for Gradio
       - name: Set startup command for Gradio
-        run: az webapp config set --name Support-Chatbot --resource-group <your-resource-group> --startup-file "python app.py"
+        run: az webapp config set --name Support-Chatbot --resource-group appsvc_linux_centralindia --startup-file "python app.py"
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Support-Chatbot'
           slot-name: 'Production'
+
