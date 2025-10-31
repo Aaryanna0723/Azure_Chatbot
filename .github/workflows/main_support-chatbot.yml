@@ -47,30 +47,27 @@ jobs:
       # 2. Refer to sample workflows for alternative deployment strategies: https://github.com/Azure/actions-workflow-samples/tree/master/AppService
       
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+ deploy:
+  runs-on: ubuntu-latest
+  needs: build
+  steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: python-app
 
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E32143CEE22C426AB8021D06AB9A6A99 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3D9537D36543431FA286C41EB937E59F }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C7CDB5FB1B7F4DC9A4D13B0F146234C0 }}
+    - name: Login to Azure
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_E32143CEE22C426AB8021D06AB9A6A99 }}
+        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3D9537D36543431FA286C41EB937E59F }}
+        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C7CDB5FB1B7F4DC9A4D13B0F146234C0 }}
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'Support-Chatbot'
-          slot-name: 'Production'
-          
+    - name: Set startup command for Gradio
+      run: az webapp config set --name Support-Chatbot --resource-group <your-resource-group> --startup-file "python app.py"
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v3
+      with:
+        app-name: 'Support-Chatbot'
+        slot-name: 'Production'
