@@ -1,4 +1,4 @@
-name: Deploy Gradio App with Dependencies
+name: Deploy Gradio App with Dependencies to Azure Web App
 
 on:
   push:
@@ -11,26 +11,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1. Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # 3. Create virtual environment and install dependencies
       - name: Install dependencies into antenv
         run: |
           python -m venv antenv
           source antenv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          python -m spacy download en_core_web_sm
+          python -m spacy download en_core_web_sm  # Optional if using SpaCy
 
+      # 4. Deploy to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'Support-Chatbot'
+          app-name: 'Support-Chatbot'  # Replace with your App Service name
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_215D5E4CA14E4F66A32817EAF57C26D8 }}
-          package: .
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
+          package: .  # Deploy actual files including antenv
